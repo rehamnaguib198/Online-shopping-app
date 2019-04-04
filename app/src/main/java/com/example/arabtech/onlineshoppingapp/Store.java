@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,22 +36,24 @@ import java.lang.reflect.Array;
  */
 @SuppressLint("ValidFragment")
 public class Store extends Fragment {
-private ListView listView;
-private FirebaseListAdapter<Model> adapter;
-     TextView name;
-     TextView time;
-    TextView description;
-     ImageView proPic;
-     ImageView post;
-    final static  String DB_URL= "https://onlineshopping-2857f.firebaseio.com/";
-    FirebaseClient firebaseClient;
+    private ListView listView;
+    private FirebaseListAdapter<Model> adapter;
+    private TextView name;
+    private TextView time;
+    private TextView description;
+    private ImageView proPic;
+    private ImageView post;
+    private String DB_URL;
+    private Stores stores;
+    private FirebaseClient firebaseClient;
+
     @SuppressLint("ValidFragment")
-    public Store(View view) {
-         name=view.findViewById(R.id.name);
+    public Store(/*View view*/) {
+         /*name=view.findViewById(R.id.name);
          time=view.findViewById(R.id.time);
          description=view.findViewById(R.id.description);
          proPic=view.findViewById(R.id.imgView_proPic);
-         post=view.findViewById(R.id.imgView_postPic);
+         post=view.findViewById(R.id.imgView_postPic);*/
     }
 
 
@@ -60,8 +63,18 @@ private FirebaseListAdapter<Model> adapter;
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_store, container, false);
         listView=(ListView) view.findViewById(R.id.listView);
-        firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
-        firebaseClient.refreshdata();
+        stores = Stores.getInstance();
+
+        ViewManager viewManager = ViewManager.getInstance();
+        viewManager.setStore(this);
+
+        if (stores.isCurrentFlag()) {
+            DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products";
+            firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
+            firebaseClient.productsUpdate();
+            stores.setCurrentFlag(false);
+        }
+        // firebaseClient.refreshdata();
         /*Query query= FirebaseDatabase.getInstance().getReference().child("posts");
         FirebaseListOptions<Model> options=new FirebaseListOptions.Builder<Model>().setLayout(R.layout.row_feed).setQuery(query,Model.class).build();
         adapter=new FirebaseListAdapter<Model>(options) {
@@ -79,5 +92,11 @@ private FirebaseListAdapter<Model> adapter;
 
         listView.setAdapter(adapter);*/
         return view;
+    }
+
+    public void changeFragment(android.support.v4.app.Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.mainFrame, fragment);
+        fragmentTransaction.commit();
     }
 }

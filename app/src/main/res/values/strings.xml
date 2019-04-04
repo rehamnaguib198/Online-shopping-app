@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Online Shopping App</string>
     <string name="navHome">Home</string>
-    <string name="navStore" />
-    <string name="nav_Store">Store</string>
-    <string name="navProfile" />
-    <string name="nav_Profile">Profile</string>
-    <string name="nav_Notifications">Notifications</string>
+    <string name="navProducts" />
+    <string name="nav_Products">All Products</string>
+    <string name="navStores" />
+    <string name="nav_Stores">Stores</string>
+    <string name="nav_Map">Map</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string-array name="spinnerItems">
@@ -15,6 +15,17 @@
         <item>500</item>
         <item>1000</item>
     </string-array>
+
+    <string-array name="categories">
+        <item>Dress</item>
+        <item>Jeans</item>
+        <item>Shirt</item>
+        <item>Shoes</item>
+        <item>Jacket</item>
+        <item>Short</item>
+        <item>SweatShirt</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

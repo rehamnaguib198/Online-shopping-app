@@ -4,14 +4,14 @@
 
     <item
         android:id="@+id/navStore"
-        android:icon="@drawable/baseline_store_black_24dp"
-        android:title="@string/nav_Store" />
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
+        android:title="@string/nav_Products" />
     <item
         android:id="@+id/navProfile"
-        android:icon="@drawable/baseline_account_circle_black_24dp"
-        android:title="@string/nav_Profile" />
+        android:icon="@drawable/ic_store_black_24dp"
+        android:title="@string/nav_Stores" />
     <item
         android:id="@+id/navNotifications"
-        android:icon="@drawable/baseline_notifications_black_24dp"
-        android:title="@string/nav_Notifications" />
+        android:icon="@drawable/ic_place_black_24dp"
+        android:title="@string/nav_Map" />
 </menu>
