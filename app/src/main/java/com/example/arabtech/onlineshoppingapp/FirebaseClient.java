@@ -21,6 +21,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
@@ -137,50 +138,89 @@ public class FirebaseClient  {
         switch (id) {
             case 1:
                 if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
-                    path.putFile(product.getUri1()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    path.putFile(product.getUri1()).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
-                            Uri u = taskSnapshot.getUploadSessionUri();
-                            firebase.child(product.getId()).child("img1").setValue(u.toString());
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return path.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                firebase.child(product.getId()).child("img1").setValue(downloadUri.toString());
+                            }
                         }
                     });
                 }
                 break;
             case 2:
                 if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
-                    path.putFile(product.getUri2()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    path.putFile(product.getUri2()).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
-                            Uri u = taskSnapshot.getUploadSessionUri();
-                            firebase.child(product.getId()).child("img3").setValue(u.toString());
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return path.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                firebase.child(product.getId()).child("img2").setValue(downloadUri.toString());
+                            }
                         }
                     });
+
                 }
                 break;
             case 3:
                 if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
-                    path.putFile(product.getUri3()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    path.putFile(product.getUri3()).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
-                            Uri u = taskSnapshot.getUploadSessionUri();
-                            firebase.child(product.getId()).child("img3").setValue(u.toString());
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return path.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                firebase.child(product.getId()).child("img3").setValue(downloadUri.toString());
+                            }
                         }
                     });
+
                 }
                 break;
             case 4:
                 if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
-                    path.putFile(product.getUri2()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    path.putFile(product.getUri4()).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
-                            Uri u = taskSnapshot.getUploadSessionUri();
-                            firebase.child(product.getId()).child("img4").setValue(u.toString());
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return path.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                firebase.child(product.getId()).child("img4").setValue(downloadUri.toString());
+                            }
                         }
                     });
+
                 }
                 break;
         }
