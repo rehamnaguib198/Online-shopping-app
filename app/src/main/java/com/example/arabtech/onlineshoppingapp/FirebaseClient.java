@@ -1,8 +1,17 @@
 package com.example.arabtech.onlineshoppingapp;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.telecom.Call;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -53,52 +62,178 @@ public class FirebaseClient  {
         firebase=new Firebase(DB_URL);
     }
 
-    /* public  void savedata(String name, String post,String time,String description,String proPic)
-     {
-         Model d= new Model();
-         d.setName(name);
-         d.setPost(post);
-         d.setTime(time);
-         d.setProPic(proPic);
-         d.setDescription(description);
-         firebase.child("posts").push().setValue(d);
-
-
-     }
- */
     public void addProduct() {
-        /*firebase.child(product.getId()).child("description").setValue(product.getDescription());
+        /*firebase.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    if (d.getKey().equals("ID")) {
+                        int x = Integer.valueOf(d.getValue().toString());
+                        x++;
+                        product.setId(Integer.toString(x));
+                        Toast.makeText(c, product.getId(), Toast.LENGTH_LONG).show();
+                        firebase.child("ID").setValue(x);
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });*/
+        product.setId("1");
+        firebase.child(product.getId()).child("description").setValue(product.getDescription());
         firebase.child(product.getId()).child("size").setValue(product.getSize());
         firebase.child(product.getId()).child("color").setValue(product.getColor());
         firebase.child(product.getId()).child("price").setValue(product.getPrice());
         firebase.child(product.getId()).child("notes").setValue(product.getNotes());
         firebase.child(product.getId()).child("offers").setValue(product.getOffers());
         firebase.child(product.getId()).child("category").setValue(product.getCategory());
-        firebase.child(product.getId()).child("time").setValue(product.getTime());*/
+        firebase.child(product.getId()).child("time").setValue(product.getTime());
 
         if (product.getUri1() != null) {
-            uploadImage(product.getUri1());
+            uploadImage(1,product.getUri1());
         } else {
             firebase.child(product.getId()).child("img1").setValue("noImage");
         }
-        /*uploadImage(2,product.getUri2());
-        uploadImage(3, product.getUri3());
-        uploadImage(4, product.getUri4());*/
-
-        /*firebase.child(product.getId()).child("img1").setValue(product.getImg1());
-        firebase.child(product.getId()).child("img2").setValue(product.getImg2());
-        firebase.child(product.getId()).child("img3").setValue(product.getImg3());
-        firebase.child(product.getId()).child("img4").setValue(product.getImg4());*/
+        if (product.getUri2() != null) {
+            uploadImage(2,product.getUri2());
+        } else {
+            firebase.child(product.getId()).child("img2").setValue("noImage");
+        }
+        if (product.getUri3() != null) {
+            uploadImage(3, product.getUri3());
+        } else {
+            firebase.child(product.getId()).child("img3").setValue("noImage");
+        }
+        if (product.getUri4() != null) {
+            uploadImage(4, product.getUri4());
+        } else {
+            firebase.child(product.getId()).child("img4").setValue("noImage");
+        }
     }
 
-    private void uploadImage(Uri uri) {
+    private void uploadImage(int id, Uri uri) {
         StorageReference storage = FirebaseStorage.getInstance().getReference();
         final StorageReference path = storage.child(uri.getLastPathSegment());
 
-        path.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        ViewManager viewManager = ViewManager.getInstance();
+        switch (id) {
+            case 1:
+                if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
+                    path.putFile(product.getUri1()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
+                            Uri u = taskSnapshot.getUploadSessionUri();
+                            firebase.child(product.getId()).child("img1").setValue(u.toString());
+                        }
+                    });
+                }
+                break;
+            case 2:
+                if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
+                    path.putFile(product.getUri2()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
+                            Uri u = taskSnapshot.getUploadSessionUri();
+                            firebase.child(product.getId()).child("img3").setValue(u.toString());
+                        }
+                    });
+                }
+                break;
+            case 3:
+                if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
+                    path.putFile(product.getUri3()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
+                            Uri u = taskSnapshot.getUploadSessionUri();
+                            firebase.child(product.getId()).child("img3").setValue(u.toString());
+                        }
+                    });
+                }
+                break;
+            case 4:
+                if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
+                    path.putFile(product.getUri2()).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
+                            Uri u = taskSnapshot.getUploadSessionUri();
+                            firebase.child(product.getId()).child("img4").setValue(u.toString());
+                        }
+                    });
+                }
+                break;
+        }
+    }
+
+    public void allProducts() {
+        firebase.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(c, "Uploaded", Toast.LENGTH_LONG).show();
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Shop shop = new Shop(dataSnapshot.getKey());
+                Stores stores = Stores.getInstance();
+                for (DataSnapshot data : dataSnapshot.getChildren()) {
+                    if (data.getKey().equals("Details")) {
+                        for (DataSnapshot d : data.getChildren()) {
+                            if (d.getKey().equals("logo")) {
+                                shop.setLogo(d.getValue().toString());
+                            }
+                        }
+                    } else if (data.getKey().equals("Products")) {
+                        for (DataSnapshot d : data.getChildren()) {
+                            Product product = new Product();
+                            product.setShop(shop);
+                            product.setId(d.getKey());
+                            product.setDescription(d.getValue(Product.class).getDescription());
+                            product.setTime(d.getValue(Product.class).getTime());
+                            product.setImg1(d.getValue(Product.class).getImg1());
+                            product.setCategory(d.getValue(Product.class).getCategory());
+                            product.setPrice(d.getValue(Product.class).getPrice());
+                            stores.getAllProducts().add(product);
+                        }
+                    }
+                }
+                stores.updateProducts(c, listView);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
     }
@@ -144,22 +279,28 @@ public class FirebaseClient  {
             Stores stores = Stores.getInstance();
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Product p;
+                if (stores.isCurrentFlag()) {
+                    p = stores.getCurrent().getSelected();
+                } else {
+                    p = stores.getSelected();
+                }
                 if (dataSnapshot.getKey().equals("size")) {
-                    stores.getCurrent().getSelected().setSize(dataSnapshot.getValue(String.class));
+                    p.setSize(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("color")) {
-                    stores.getCurrent().getSelected().setColor(dataSnapshot.getValue(String.class));
+                    p.setColor(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("price")) {
-                    stores.getCurrent().getSelected().setPrice(dataSnapshot.getValue(String.class));
+                    p.setPrice(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("offers")) {
-                    stores.getCurrent().getSelected().setOffers(dataSnapshot.getValue(String.class));
+                    p.setOffers(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("notes")) {
-                    stores.getCurrent().getSelected().setNotes(dataSnapshot.getValue(String.class));
+                    p.setNotes(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("img2")) {
-                    stores.getCurrent().getSelected().setImg2(dataSnapshot.getValue(String.class));
+                    p.setImg2(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("img3")) {
-                    stores.getCurrent().getSelected().setImg3(dataSnapshot.getValue(String.class));
+                    p.setImg3(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("img4")) {
-                    stores.getCurrent().getSelected().setImg4(dataSnapshot.getValue(String.class));
+                    p.setImg4(dataSnapshot.getValue(String.class));
                 }
             }
 
@@ -249,6 +390,55 @@ public class FirebaseClient  {
 
             }
         });
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
+    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
+            final Context context) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat
+                            .requestPermissions(
+                                    (Activity) context,
+                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
+    public void showDialog(final String msg, final Context context,
+                           final String permission) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+        alertBuilder.setCancelable(true);
+        alertBuilder.setTitle("Permission necessary");
+        alertBuilder.setMessage(msg + " permission is necessary");
+        alertBuilder.setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        ActivityCompat.requestPermissions((Activity) context,
+                                new String[] { permission },
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                    }
+                });
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
     }
     /*public  void refreshdata()
     {

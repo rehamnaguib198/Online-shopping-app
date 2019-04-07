@@ -45,11 +45,11 @@ public class Profile extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String name = (String)storesList.getItemAtPosition(position);
                 Stores stores = Stores.getInstance();
+                stores.setCurrentFlag(true);
                 stores.setCurrent(name);
                 DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + name + "/Details";
                 firebaseClient = new FirebaseClient(getContext(), DB_URL);
                 firebaseClient.getStoreInfo();
-                stores.setCurrentFlag(true);
                 setFragment(new Store());
             }
         });

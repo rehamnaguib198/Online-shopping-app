@@ -72,25 +72,12 @@ public class Store extends Fragment {
             DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products";
             firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
             firebaseClient.productsUpdate();
-            stores.setCurrentFlag(false);
+        } else {
+            stores.getAllProducts().clear();
+            DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores";
+            firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
+            firebaseClient.allProducts();
         }
-        // firebaseClient.refreshdata();
-        /*Query query= FirebaseDatabase.getInstance().getReference().child("posts");
-        FirebaseListOptions<Model> options=new FirebaseListOptions.Builder<Model>().setLayout(R.layout.row_feed).setQuery(query,Model.class).build();
-        adapter=new FirebaseListAdapter<Model>(options) {
-            @Override
-            protected void populateView(@NonNull View v, @NonNull Model model, int position) {
-                Model rowModel=(Model) model;
-                name.setText(rowModel.getName().toString());
-                time.setText(rowModel.getTime().toString());
-                description.setText(rowModel.getDescription().toString());
-                Picasso.with(getContext()).load(rowModel.getProPic()).into(proPic);
-                Picasso.with(getContext()).load(rowModel.getPost()).into(post);
-                Toast.makeText(getContext(),rowModel.getName().toString(),Toast.LENGTH_LONG);
-            }
-        };
-
-        listView.setAdapter(adapter);*/
         return view;
     }
 

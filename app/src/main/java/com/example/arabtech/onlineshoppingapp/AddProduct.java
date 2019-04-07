@@ -1,20 +1,37 @@
 package com.example.arabtech.onlineshoppingapp;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Calendar;
 
 public class AddProduct extends AppCompatActivity {
 
@@ -40,7 +57,7 @@ public class AddProduct extends AppCompatActivity {
 
     private Product product;
 
-    private Uri uri;
+    private int num;
     private Uri uri1;
     private Uri uri2;
     private Uri uri3;
@@ -55,6 +72,9 @@ public class AddProduct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
+        ViewManager viewManager = ViewManager.getInstance();
+        viewManager.setActivity(this);
+
         description = findViewById(R.id.add_description);
         size = findViewById(R.id.add_size);
         color = findViewById(R.id.add_color);
@@ -63,12 +83,17 @@ public class AddProduct extends AppCompatActivity {
         offers = findViewById(R.id.add_offers);
 
         categories = findViewById(R.id.add_category);
-        /*categories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        categories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 category = categories.getItemAtPosition(position).toString();
             }
-        });*/
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         img1 = findViewById(R.id.add_image1);
         img2 = findViewById(R.id.add_image2);
@@ -83,8 +108,7 @@ public class AddProduct extends AppCompatActivity {
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INENT);
 
-                /*uri1 = uri;
-                uri = null;*/
+                num = 1;
 
                 /*try {
                     InputStream imageStream = getContentResolver().openInputStream(uri);
@@ -103,16 +127,15 @@ public class AddProduct extends AppCompatActivity {
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INENT);
 
-                uri2 = uri;
-                uri = null;
+                num = 2;
 
-                try {
+                /*try {
                     InputStream imageStream = getContentResolver().openInputStream(uri);
                     Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     img2.setImageBitmap(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
         upload3 = findViewById(R.id.upload_img3);
@@ -123,16 +146,15 @@ public class AddProduct extends AppCompatActivity {
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INENT);
 
-                uri3 = uri;
-                uri = null;
+                num = 3;
 
-                try {
+                /*try {
                     InputStream imageStream = getContentResolver().openInputStream(uri);
                     Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     img3.setImageBitmap(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
         upload4 = findViewById(R.id.upload_img4);
@@ -143,16 +165,15 @@ public class AddProduct extends AppCompatActivity {
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INENT);
 
-                uri4 = uri;
-                uri = null;
+                num = 4;
 
-                try {
+                /*try {
                     InputStream imageStream = getContentResolver().openInputStream(uri);
                     Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     img4.setImageBitmap(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         });
         add = findViewById(R.id.add_product);
@@ -160,7 +181,6 @@ public class AddProduct extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 product = new Product();
-                product.setId("256");
                 product.setColor(color.getText().toString());
                 product.setSize(size.getText().toString());
                 product.setNotes(notes.getText().toString());
@@ -172,8 +192,7 @@ public class AddProduct extends AppCompatActivity {
                 product.setUri2(uri2);
                 product.setUri3(uri3);
                 product.setUri4(uri4);
-                //time
-                //id
+                product.setTime(Calendar.getInstance().getTime().toString());
                 product.add(getApplicationContext());
             }
         });
@@ -185,8 +204,20 @@ public class AddProduct extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == GALLERY_INENT && resultCode == RESULT_OK) {
-            uri1 = data.getData();
-
+            switch (num) {
+                case 1:
+                    uri1 = data.getData();
+                    break;
+                case 2:
+                    uri2 = data.getData();
+                    break;
+                case 3:
+                    uri3 = data.getData();
+                    break;
+                case 4:
+                    uri4 = data.getData();
+                    break;
+            }
         }
     }
 }

@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navStore:
+                        Stores stores = Stores.getInstance();
+                        stores.setCurrentFlag(false);
                         setFragment(store);
                         return true;
                     case R.id.navProfile:

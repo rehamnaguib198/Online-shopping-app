@@ -65,19 +65,29 @@ public class CustomAdapter extends BaseAdapter {
         showItem = view.findViewById(R.id.showButton);
         final Stores stores = Stores.getInstance();
 
-        name.setText(stores.getCurrent().getName());
+        if (stores.isCurrentFlag()) {
+            name.setText(stores.getCurrent().getName());
+            if (stores.getCurrent().getLogo().equals("noImage")) {
+                proPic.setImageResource(R.drawable.no_image);
+            } else {
+                PicassoClient.downloadImg(context, stores.getCurrent().getLogo(), proPic);
+            }
+        } else {
+            name.setText(products.get(i).getShop().getName());
+            if (products.get(i).getShop().getLogo().equals("noImage")) {
+                proPic.setImageResource(R.drawable.no_image);
+            } else {
+                PicassoClient.downloadImg(context, products.get(i).getShop().getLogo(), proPic);
+            }
+        }
         time.setText(products.get(i).getTime());
         description.setText(products.get(i).getDescription());
         if (products.get(i).getImg1().equals("noImage")) {
             post.setImageResource(R.drawable.no_image);
         } else {
-            PicassoClient.downloadImg(context,products.get(i).getImg1(),post);
+            PicassoClient.downloadImg(context, products.get(i).getImg1(), post);
         }
-        if (stores.getCurrent().getLogo().equals("noImage")) {
-            proPic.setImageResource(R.drawable.no_image);
-        } else {
-            PicassoClient.downloadImg(context, stores.getCurrent().getLogo(), proPic);
-        }
+
 
         showItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,20 +95,17 @@ public class CustomAdapter extends BaseAdapter {
                 View parentRow = (View) v.getParent();
                 ListView list = (ListView) parentRow.getParent();
                 int index = list.getPositionForView(parentRow);
-                stores.getCurrent().selectProduct(index);
-                stores.getCurrent().getSelected().show(context);
-
+                if (stores.isCurrentFlag()) {
+                    stores.getCurrent().selectProduct(index);
+                    stores.getCurrent().getSelected().show(context);
+                } else {
+                    stores.selectProduct(index);
+                    stores.getSelected().show(context);
+                }
                 ViewManager viewManager = ViewManager.getInstance();
                 viewManager.getStore().changeFragment(new ShowProduct());
             }
         });
-
-        /*Store store=new Store(view);
-        store.name.setText(models.get(i).getName());
-        store.description.setText(models.get(i).getDescription());
-        store.time.setText(models.get(i).getTime());
-        //PicassoClient.downloadImg(context,models.get(i).getProPic(),store.proPic);
-        //PicassoClient.downloadImg(context,models.get(i).getPost(),store.post);*/
         return view;
     }
 }

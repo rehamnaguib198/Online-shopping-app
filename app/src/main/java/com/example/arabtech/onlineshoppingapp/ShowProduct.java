@@ -56,14 +56,18 @@ public class ShowProduct extends Fragment {
         img4 = view.findViewById(R.id.image4);
 
         stores = Stores.getInstance();
-        current = stores.getCurrent();
-        selected = current.getSelected();
+        if (stores.isCurrentFlag()) {
+            current = stores.getCurrent();
+            selected = current.getSelected();
+        }
+        current = stores.getSelected().getShop();
+        selected = stores.getSelected();
 
         storeName.setText(current.getName());
         if (current.getLogo().equals("noImage")) {
             logo.setImageResource(R.drawable.no_image);
         } else {
-            PicassoClient.downloadImg(getContext(), stores.getCurrent().getLogo(), logo);
+            PicassoClient.downloadImg(getContext(), current.getLogo(), logo);
         }
 
         description.setText(selected.getDescription());

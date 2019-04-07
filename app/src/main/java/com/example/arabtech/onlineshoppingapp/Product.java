@@ -5,6 +5,7 @@ import android.net.Uri;
 
 public class Product {
 
+    private Shop shop;
     private String description;
     private String notes;
     private String offers;
@@ -19,6 +20,14 @@ public class Product {
     private Uri uri2;
     private Uri uri3;
     private Uri uri4;
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
 
     public String getId() {
         return id;
@@ -166,7 +175,12 @@ public class Product {
 
     public void show(Context c) {
         Stores stores = Stores.getInstance();
-        String DB_URL= "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products/" + this.id ;
+        String DB_URL;
+        if (stores.isCurrentFlag()) {
+            DB_URL= "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products/" + this.id ;
+        } else {
+            DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + getShop().getName() + "/Products/" + this.id ;
+        }
         FirebaseClient firebaseClient = new FirebaseClient(c, DB_URL);
         firebaseClient.getDetails();
     }
