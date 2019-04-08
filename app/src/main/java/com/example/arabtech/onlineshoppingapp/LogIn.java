@@ -12,40 +12,52 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static util.Constants.ERROR_DIALOG_REQUEST;
 import static util.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static util.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 public class LogIn extends AppCompatActivity {
-private EditText email;
-private EditText password;
-    private boolean mLocationPermissionGranted=false;
+    private EditText email;
+    private EditText password;
+    private FirebaseAuth mAuth;
+    private boolean mLocationPermissionGranted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-        email=(EditText) findViewById(R.id.emailEditText);
-        password=(EditText) findViewById(R.id.passwordEditText);
-        if(checkMapServices()){
-            if(mLocationPermissionGranted){
+        email = (EditText) findViewById(R.id.emailEditText);
+        password = (EditText) findViewById(R.id.passwordEditText);
+        if (checkMapServices()) {
+            if (mLocationPermissionGranted) {
 
-            }
-            else{
+            } else {
                 getLocationPermission();
             }
         }
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            signIn();
+        }
     }
+
     //map permissions
-    private boolean checkMapServices(){
-        if(isServicesOK()){
-            if(isMapsEnabled()){
+    private boolean checkMapServices() {
+        if (isServicesOK()) {
+            if (isMapsEnabled()) {
                 return true;
             }
         }
@@ -66,10 +78,10 @@ private EditText password;
         alert.show();
     }
 
-    public boolean isMapsEnabled(){
-        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+    public boolean isMapsEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps();
             return false;
         }
@@ -94,22 +106,21 @@ private EditText password;
         }
     }
 
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
         // Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(LogIn.this);
 
-        if(available == ConnectionResult.SUCCESS){
+        if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
             //  Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //an error occured but we can resolve it
             // Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(LogIn.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
+        } else {
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
@@ -137,20 +148,35 @@ private EditText password;
         //Log.d(TAG, "onActivityResult: called.");
         switch (requestCode) {
             case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                if(mLocationPermissionGranted){
+                if (mLocationPermissionGranted) {
 
-                }
-                else{
+                } else {
                     getLocationPermission();
                 }
             }
         }
 
     }
-    public void login(View view){
-        startActivity(new Intent(LogIn.this, MainActivity.class));
+
+    public void login(View view) {
+        mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            signIn();
+                        } else {
+                            Toast.makeText(LogIn.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
-    public void register(View view){
+
+    public void register(View view) {
         startActivity(new Intent(LogIn.this, Register.class));
+    }
+    public void signIn(){
+        startActivity(new Intent(LogIn.this, MainActivity.class));
     }
 }
