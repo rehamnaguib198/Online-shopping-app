@@ -59,9 +59,10 @@ public class ShowProduct extends Fragment {
         if (stores.isCurrentFlag()) {
             current = stores.getCurrent();
             selected = current.getSelected();
+        } else {
+            current = stores.getSelected().getShop();
+            selected = stores.getSelected();
         }
-        current = stores.getSelected().getShop();
-        selected = stores.getSelected();
 
         storeName.setText(current.getName());
         if (current.getLogo().equals("noImage")) {
