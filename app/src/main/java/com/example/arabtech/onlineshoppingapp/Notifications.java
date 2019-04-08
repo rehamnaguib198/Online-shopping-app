@@ -122,14 +122,13 @@ public class Notifications extends Fragment implements OnMapReadyCallback {
                 mMap.clear();
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,18));
                 FirebaseDatabase.getInstance().getReference().child("locations").addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String storeName = dataSnapshot.child("name").getValue().toString();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.getKey() != storeName) {
-                                // Log.i("location",snapshot.getValue().toString());
                                 for (DataSnapshot ds : snapshot.getChildren()) {
                                     if (ds.getKey().equals("lat")) {
                                         lat = (Double) ds.getValue();
@@ -137,7 +136,6 @@ public class Notifications extends Fragment implements OnMapReadyCallback {
                                         lng = (Double) ds.getValue();
                                     }
                                 }
-                                //ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRR
                                 LatLng storeLocation = new LatLng(lat, lng);
                                 Log.i("lat", String.valueOf(lat));
                                 Log.i("lng", String.valueOf(lng));
@@ -201,7 +199,7 @@ public class Notifications extends Fragment implements OnMapReadyCallback {
                 mMap.clear();
                 LatLng userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,18));
             }
         }
     }

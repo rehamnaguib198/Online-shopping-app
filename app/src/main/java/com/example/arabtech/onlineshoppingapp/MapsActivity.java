@@ -78,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,18));
             }
 
             @Override
@@ -108,11 +108,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                 Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
                 mMap.clear();
                 LatLng userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLocation,18));
             }
         }
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
