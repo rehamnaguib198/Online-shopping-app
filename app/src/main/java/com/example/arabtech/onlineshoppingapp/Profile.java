@@ -34,6 +34,14 @@ public class Profile extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        FirebaseManager firebaseManager = FirebaseManager.getInstance();
+        for(int i = 0; i < firebaseManager.getListener().size(); i++) {
+            firebaseManager.getFirebase().get(i).removeEventListener(firebaseManager.getListener().get(i));
+        }
+        firebaseManager.getFirebase().clear();
+        firebaseManager.getListener().clear();
+
         storesList = view.findViewById(R.id.storesListView);
         DB_URL= "https://onlineshopping-2857f.firebaseio.com/Stores";
         stores = Stores.getInstance();
@@ -47,6 +55,7 @@ public class Profile extends Fragment {
                 Stores stores = Stores.getInstance();
                 stores.setCurrentFlag(true);
                 stores.setCurrent(name);
+                stores.getCurrent().setSelected(null);
                 DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + name + "/Details";
                 firebaseClient = new FirebaseClient(getContext(), DB_URL);
                 firebaseClient.getStoreInfo();

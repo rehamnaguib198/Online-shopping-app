@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -73,6 +74,7 @@ public class ShowProduct extends Fragment {
 
         description.setText(selected.getDescription());
         size.setText(selected.getSize());
+        Toast.makeText(getContext(), selected.getSize(), Toast.LENGTH_LONG).show();
         color.setText(selected.getColor());
         price.setText(selected.getPrice());
         offers.setText(selected.getOffers());
@@ -83,7 +85,7 @@ public class ShowProduct extends Fragment {
             PicassoClient.downloadImg(getContext(),selected.getImg1(),img1);
         }
 
-        if (selected.getImg2().equals("noImage")) {
+        /*if (selected.getImg2().equals("noImage")) {
             img2.setImageResource(R.drawable.no_image);
         } else {
             PicassoClient.downloadImg(getContext(),selected.getImg2(),img2);
@@ -99,7 +101,7 @@ public class ShowProduct extends Fragment {
             img4.setImageResource(R.drawable.no_image);
         } else {
             PicassoClient.downloadImg(getContext(),selected.getImg4(),img4);
-        }
+        }*/
 
         return view;
     }

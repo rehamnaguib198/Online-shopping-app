@@ -2,6 +2,7 @@ package com.example.arabtech.onlineshoppingapp;
 
 import android.content.Context;
 import android.net.Uri;
+import android.widget.Toast;
 
 public class Product {
 
@@ -181,7 +182,9 @@ public class Product {
         } else {
             DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + getShop().getName() + "/Products/" + this.id ;
         }
-        FirebaseClient firebaseClient = new FirebaseClient(c, DB_URL);
+        FirebaseManager firebaseManager = FirebaseManager.getInstance();
+        FirebaseClient firebaseClient = new FirebaseClient(c, DB_URL, this);
+        firebaseManager.setFirebaseClient(firebaseClient);
         firebaseClient.getDetails();
     }
 

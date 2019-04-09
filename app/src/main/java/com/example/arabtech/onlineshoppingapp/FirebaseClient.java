@@ -288,6 +288,8 @@ public class FirebaseClient  {
                 product.setDescription(dataSnapshot.getValue(Product.class).getDescription());
                 product.setTime(dataSnapshot.getValue(Product.class).getTime());
                 product.setImg1(dataSnapshot.getValue(Product.class).getImg1());
+                product.setCategory(dataSnapshot.getValue(Product.class).getCategory());
+                product.setPrice(dataSnapshot.getValue(Product.class).getPrice());
                 stores.getCurrent().getProducts().add(product);
                 stores.getCurrent().updateProducts(c, listView);
             }
@@ -315,32 +317,57 @@ public class FirebaseClient  {
     }
 
     public void getDetails() {
+        /*firebase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    if (d.getKey().equals("size")) {
+                        product.setSize(d.getValue(String.class));
+                    } else if (d.getKey().equals("color")) {
+                        product.setColor(d.getValue(String.class));
+                    } else if (d.getKey().equals("price")) {
+                        product.setPrice(d.getValue(String.class));
+                    } else if (d.getKey().equals("offers")) {
+                        product.setOffers(d.getValue(String.class));
+                    } else if (d.getKey().equals("notes")) {
+                        product.setNotes(d.getValue(String.class));
+                    } else if (d.getKey().equals("img2")) {
+                        product.setImg2(d.getValue(String.class));
+                    } else if (d.getKey().equals("img3")) {
+                        product.setImg3(d.getValue(String.class));
+                    } else if (d.getKey().equals("img4")) {
+                        product.setImg4(d.getValue(String.class));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });*/
         firebase.addChildEventListener(new ChildEventListener() {
-            Stores stores = Stores.getInstance();
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Product p;
-                if (stores.isCurrentFlag()) {
-                    p = stores.getCurrent().getSelected();
-                } else {
-                    p = stores.getSelected();
-                }
+                FirebaseManager firebaseManager = FirebaseManager.getInstance();
+                firebaseManager.getFirebase().add(firebase);
+                firebaseManager.getListener().add(this);
                 if (dataSnapshot.getKey().equals("size")) {
-                    p.setSize(dataSnapshot.getValue(String.class));
+                    product.setSize(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("color")) {
-                    p.setColor(dataSnapshot.getValue(String.class));
+                    product.setColor(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("price")) {
-                    p.setPrice(dataSnapshot.getValue(String.class));
+                    product.setPrice(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("offers")) {
-                    p.setOffers(dataSnapshot.getValue(String.class));
+                    product.setOffers(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("notes")) {
-                    p.setNotes(dataSnapshot.getValue(String.class));
+                    product.setNotes(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("img2")) {
-                    p.setImg2(dataSnapshot.getValue(String.class));
+                    product.setImg2(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("img3")) {
-                    p.setImg3(dataSnapshot.getValue(String.class));
+                    product.setImg3(dataSnapshot.getValue(String.class));
                 } else if (dataSnapshot.getKey().equals("img4")) {
-                    p.setImg4(dataSnapshot.getValue(String.class));
+                    product.setImg4(dataSnapshot.getValue(String.class));
                 }
             }
 

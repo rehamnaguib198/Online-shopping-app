@@ -47,6 +47,10 @@ public class Stores {
         return current;
     }
 
+    public void setCurrent(Shop current) {
+        this.current = current;
+    }
+
     public void setCurrent(String name) {
         this.current = new Shop(name);
     }
@@ -61,6 +65,10 @@ public class Stores {
 
     public Product getSelected() {
         return selected;
+    }
+
+    public void setSelected(Product selected) {
+        this.selected = selected;
     }
 
     public void selectProduct(int index) {

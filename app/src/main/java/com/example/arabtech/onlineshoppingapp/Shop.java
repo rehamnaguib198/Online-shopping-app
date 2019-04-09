@@ -44,6 +44,10 @@ public class Shop {
         return selected;
     }
 
+    public void setSelected(Product selected) {
+        this.selected = selected;
+    }
+
     public void updateProducts(Context c, ListView list) {
         CustomAdapter customAdapter = new CustomAdapter(c, this.products);
         list.setAdapter(customAdapter);

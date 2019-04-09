@@ -68,12 +68,23 @@ public class Store extends Fragment {
         ViewManager viewManager = ViewManager.getInstance();
         viewManager.setStore(this);
 
+        FirebaseManager firebaseManager = FirebaseManager.getInstance();
+        for(int i = 0; i < firebaseManager.getListener().size(); i++) {
+            firebaseManager.getFirebase().get(i).removeEventListener(firebaseManager.getListener().get(i));
+        }
+        firebaseManager.getFirebase().clear();
+        firebaseManager.getListener().clear();
+
+
         if (stores.isCurrentFlag()) {
+            stores.getCurrent().setSelected(null);
+            stores.getCurrent().getProducts().clear();
             DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products";
             firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
             firebaseClient.productsUpdate();
         } else {
             stores.getAllProducts().clear();
+            stores.setSelected(null);
             DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores";
             firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
             firebaseClient.allProducts();

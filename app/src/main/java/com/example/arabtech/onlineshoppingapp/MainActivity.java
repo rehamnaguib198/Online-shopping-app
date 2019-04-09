@@ -26,8 +26,11 @@ import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import java.util.ArrayList;
 
 import static util.Constants.ERROR_DIALOG_REQUEST;
 import static util.Constants.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
