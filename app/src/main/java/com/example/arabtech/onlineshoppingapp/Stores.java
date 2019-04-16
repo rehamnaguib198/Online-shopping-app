@@ -10,8 +10,10 @@ public class Stores {
     private static Stores instance = null;
     private ArrayList<String> names;
     private  ArrayList<Product> allProducts;
+    private ArrayList<Product> filtered;
     private Shop current;
     private boolean currentFlag;
+    private boolean filters;
     private Product selected;
 
     private Stores() {
@@ -33,6 +35,14 @@ public class Stores {
 
     public void setAllProducts(ArrayList<Product> allProducts) {
         this.allProducts = allProducts;
+    }
+
+    public ArrayList<Product> getFiltered() {
+        return filtered;
+    }
+
+    public void setFiltered(ArrayList<Product> filtered) {
+        this.filtered = filtered;
     }
 
     public boolean isCurrentFlag() {
@@ -72,7 +82,12 @@ public class Stores {
     }
 
     public void selectProduct(int index) {
-        selected = allProducts.get(index);
+        if (filters)  {
+            selected = filtered.get(index);
+        } else {
+            selected = allProducts.get(index);
+        }
+
     }
 
     public void updateList(Context c, ListView list) {
@@ -82,7 +97,12 @@ public class Stores {
     }
 
     public void updateProducts(Context c, ListView list) {
-        CustomAdapter customAdapter = new CustomAdapter(c, this.allProducts);
+        CustomAdapter customAdapter;
+        if (filters) {
+            customAdapter = new CustomAdapter(c, this.filtered);
+        } else {
+            customAdapter = new CustomAdapter(c, this.allProducts);
+        }
         list.setAdapter(customAdapter);
     }
 }
