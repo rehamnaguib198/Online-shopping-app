@@ -40,7 +40,6 @@ public class CustomAdapter extends BaseAdapter {
     private Button showItem;
     private Shop shop=null;
     private Button deleteItem;
-    private UUID uuid;
 
     public CustomAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
@@ -150,34 +149,23 @@ public class CustomAdapter extends BaseAdapter {
                 View parentRow = (View) v.getParent();
                 ListView list = (ListView) parentRow.getParent();
                 int index = list.getPositionForView(parentRow);
+                String myProduct="";
                 if (shop != null) {
-                    uuid=shop.getProducts().get(index).getUuid();
+                    myProduct=shop.getProducts().get(index).getId();
                     shop.deleteProduct(index);
                 }
                 else{
                     final Stores stores = Stores.getInstance();
                     if (stores.isCurrentFlag()) {
-                        uuid=stores.getCurrent().getProducts().get(index).getUuid();
+                        myProduct=stores.getCurrent().getProducts().get(index).getId();
                         stores.getCurrent().deleteProduct(index);
                     } else {
-                        uuid=stores.getAllProducts().get(index).getUuid();
+                        myProduct=stores.getAllProducts().get(index).getId();
                         stores.deleteProduct(index);
                     }
                 }
 
-                FirebaseDatabase.getInstance().getReference().child("Stores").child(name.getText().toString()).child("Products").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            if(snapshot.child("uuid").getValue().toString().equals(uuid.toString())){
-                                snapshot.getRef().removeValue();
-                            }
-                        }
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                FirebaseDatabase.getInstance().getReference().child("Stores").child(name.getText().toString()).child("Products").child(myProduct).removeValue();
                 ViewManager viewManager = ViewManager.getInstance();
                 viewManager.getStore().changeFragment(new ShowProduct());
             }

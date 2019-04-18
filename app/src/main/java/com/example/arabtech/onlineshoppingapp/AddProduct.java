@@ -194,7 +194,6 @@ public class AddProduct extends AppCompatActivity {
                 product.setUri3(uri3);
                 product.setUri4(uri4);
                 product.setTime(Calendar.getInstance().getTime().toString());
-                product.setUuid(UUID.randomUUID());
                 product.add(getApplicationContext());
             }
         });

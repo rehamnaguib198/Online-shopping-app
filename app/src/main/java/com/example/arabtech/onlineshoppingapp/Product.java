@@ -24,16 +24,6 @@ public class Product {
     private Uri uri3;
     private Uri uri4;
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
-    private UUID uuid;
-
     public Shop getShop() {
         return shop;
     }
