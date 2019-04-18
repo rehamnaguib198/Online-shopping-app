@@ -12,10 +12,35 @@ public class Shop {
    private String logo;
    private Product selected;
    private boolean filters;
+   private boolean registered = false;
 
     public Shop(String name) {
         products = new ArrayList<Product>();
         this.name = name;
+    }
+
+    public ArrayList<Product> getFiltered() {
+        return filtered;
+    }
+
+    public void setFiltered(ArrayList<Product> filtered) {
+        this.filtered = filtered;
+    }
+
+    public boolean isFilters() {
+        return filters;
+    }
+
+    public void setFilters(boolean filters) {
+        this.filters = filters;
+    }
+
+    public boolean isRegistered() {
+        return registered;
+    }
+
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     public String getName() {
@@ -55,7 +80,12 @@ public class Shop {
         if (filters) {
             customAdapter = new CustomAdapter(c, this.filtered);
         } else {
-            customAdapter = new CustomAdapter(c, this.products);
+            if (registered) {
+                customAdapter = new CustomAdapter(c, this.products, this);
+            } else {
+                customAdapter = new CustomAdapter(c, this.products);
+            }
+
         }
         list.setAdapter(customAdapter);
     }
@@ -66,7 +96,7 @@ public class Shop {
         } else {
             selected = products.get(index);
         }
-
+        selected.setShop(this);
     }
 
 }

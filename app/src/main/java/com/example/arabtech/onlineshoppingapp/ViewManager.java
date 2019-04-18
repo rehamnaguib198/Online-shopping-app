@@ -6,6 +6,7 @@ public class ViewManager {
 
     private static ViewManager instance = null;
     private Store store;
+    private MyStore myStore;
     private Activity activity;
 
     private ViewManager() {
@@ -35,5 +36,11 @@ public class ViewManager {
         this.store = store;
     }
 
+    public MyStore getMyStore() {
+        return myStore;
+    }
 
+    public void setMyStore(MyStore myStore) {
+        this.myStore = myStore;
+    }
 }

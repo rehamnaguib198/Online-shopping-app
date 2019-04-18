@@ -167,7 +167,7 @@ public class Product {
     }
 
     public void add(Context c) {
-        String DB_URL= "https://onlineshopping-2857f.firebaseio.com/Stores/Rojada/Products";
+        String DB_URL= "https://onlineshopping-2857f.firebaseio.com/Stores/"+getShop().getName()+"/Products";
         FirebaseClient firebaseClient = new FirebaseClient(c, DB_URL, this);
         firebaseClient.addProduct();
        /* DatabaseReference ref = FirebaseDatabase.getInstance().getReference();

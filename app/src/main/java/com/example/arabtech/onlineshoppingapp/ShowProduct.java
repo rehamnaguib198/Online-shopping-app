@@ -36,13 +36,19 @@ public class ShowProduct extends Fragment {
         // Required empty public constructor
     }
 
+    public void setCurrent(Shop current) {
+        this.current = current;
+    }
+
+    public void setSelected(Product selected) {
+        this.selected = selected;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_show_product, container, false);
-
         storeName = view.findViewById(R.id.storeName);
         description = view.findViewById(R.id.title);
         size = view.findViewById(R.id.size);

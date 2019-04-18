@@ -76,24 +76,31 @@ public class CustomAdapter extends BaseAdapter {
         showItem = view.findViewById(R.id.showButton);
         if(shop!=null){
             deleteItem=view.findViewById(R.id.deleteButton);
-        }
-        final Stores stores = Stores.getInstance();
-
-        if (stores.isCurrentFlag()) {
-            name.setText(stores.getCurrent().getName());
-            if (stores.getCurrent().getLogo().equals("noImage")) {
+            name.setText(shop.getName());
+            if (shop.getLogo().equals("noImage")) {
                 proPic.setImageResource(R.drawable.no_image);
             } else {
-                PicassoClient.downloadImg(context, stores.getCurrent().getLogo(), proPic);
+                PicassoClient.downloadImg(context, shop.getLogo(), proPic);
             }
         } else {
-            name.setText(products.get(i).getShop().getName());
-            if (products.get(i).getShop().getLogo().equals("noImage")) {
-                proPic.setImageResource(R.drawable.no_image);
+            final Stores stores = Stores.getInstance();
+            if (stores.isCurrentFlag()) {
+                name.setText(stores.getCurrent().getName());
+                if (stores.getCurrent().getLogo().equals("noImage")) {
+                    proPic.setImageResource(R.drawable.no_image);
+                } else {
+                    PicassoClient.downloadImg(context, stores.getCurrent().getLogo(), proPic);
+                }
             } else {
-                PicassoClient.downloadImg(context, products.get(i).getShop().getLogo(), proPic);
+                name.setText(products.get(i).getShop().getName());
+                if (products.get(i).getShop().getLogo().equals("noImage")) {
+                    proPic.setImageResource(R.drawable.no_image);
+                } else {
+                    PicassoClient.downloadImg(context, products.get(i).getShop().getLogo(), proPic);
+                }
             }
         }
+
         time.setText(products.get(i).getTime());
         description.setText(products.get(i).getDescription());
         if (products.get(i).getImg1().equals("noImage")) {
@@ -114,6 +121,7 @@ public class CustomAdapter extends BaseAdapter {
                     shop.getSelected().show(context);
                 }
                 else{
+                    final Stores stores = Stores.getInstance();
                     if (stores.isCurrentFlag()) {
                         stores.getCurrent().selectProduct(index);
                         stores.getCurrent().getSelected().show(context);
@@ -121,9 +129,9 @@ public class CustomAdapter extends BaseAdapter {
                         stores.selectProduct(index);
                         stores.getSelected().show(context);
                     }
-                    ViewManager viewManager = ViewManager.getInstance();
-                    viewManager.getStore().changeFragment(new ShowProduct());
                 }
+                ViewManager viewManager = ViewManager.getInstance();
+                viewManager.getStore().changeFragment(new ShowProduct());
             }
         });
         return view;
