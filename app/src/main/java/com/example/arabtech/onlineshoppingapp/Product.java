@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 public class Product {
 
     private Shop shop;
@@ -21,6 +23,16 @@ public class Product {
     private Uri uri2;
     private Uri uri3;
     private Uri uri4;
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    private UUID uuid;
 
     public Shop getShop() {
         return shop;

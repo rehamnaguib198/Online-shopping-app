@@ -98,5 +98,13 @@ public class Shop {
         }
         selected.setShop(this);
     }
+    public void deleteProduct(int index){
+        if (filters) {
+            selected = filtered.remove(index);
+        } else {
+            selected = products.remove(index);
+        }
+
+    }
 
 }

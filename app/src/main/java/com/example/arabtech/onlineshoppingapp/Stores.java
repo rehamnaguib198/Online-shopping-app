@@ -89,6 +89,14 @@ public class Stores {
         }
 
     }
+    public void deleteProduct(int index){
+        if (filters) {
+            selected = filtered.remove(index);
+        } else {
+            selected = allProducts.remove(index);
+        }
+
+    }
 
     public void updateList(Context c, ListView list) {
         ArrayAdapter adapter = new ArrayAdapter(c,android.R.layout.simple_list_item_1, names);
@@ -105,4 +113,5 @@ public class Stores {
         }
         list.setAdapter(customAdapter);
     }
+
 }

@@ -53,6 +53,7 @@ public class Register extends AppCompatActivity {
     private ImageView imageView;
     String imageName= UUID.randomUUID().toString()+".jpg";
     private FirebaseAuth mAuth=FirebaseAuth.getInstance();;
+    private Uri selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +89,7 @@ public class Register extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri selectedImage = data.getData();
+        selectedImage = data.getData();
         if (requestCode == 1 && resultCode == RESULT_OK && selectedImage != null) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
@@ -114,6 +115,11 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseDatabase.getInstance().getReference().child("Stores").child(nameEditText.getText().toString()).child("Details").setValue(0);
+                            FirebaseDatabase.getInstance().getReference().child("Stores").child(nameEditText.getText().toString()).child("Products").setValue(0);
+                            String DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + nameEditText.getText().toString();
+                            FirebaseClient client=new FirebaseClient(getApplicationContext(),DB_URL);
+                            client.uploadImage(0,selectedImage);
                             FirebaseUser user = mAuth.getCurrentUser();
                             HashMap<String,String> userMap=new HashMap();
                             userMap.put("name",nameEditText.getText().toString());

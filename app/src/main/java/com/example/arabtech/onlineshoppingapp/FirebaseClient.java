@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -140,12 +141,34 @@ public class FirebaseClient  {
         }
     }
 
-    private void uploadImage(int id, Uri uri) {
+    public void uploadImage(int id, Uri uri) {
         StorageReference storage = FirebaseStorage.getInstance().getReference();
         final StorageReference path = storage.child(uri.getLastPathSegment());
 
         ViewManager viewManager = ViewManager.getInstance();
         switch (id) {
+            case 0:
+                if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
+                    path.putFile(uri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        @Override
+                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            if (!task.isSuccessful()) {
+                                throw task.getException();
+                            }
+                            return path.getDownloadUrl();
+                        }
+                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Uri downloadUri = task.getResult();
+                                firebase.child("Details").child("logo").setValue(downloadUri.toString());
+                            }
+                        }
+                    });
+
+                }
+                break;
             case 1:
                 if (checkPermissionREAD_EXTERNAL_STORAGE(viewManager.getActivity())) {
                     path.putFile(product.getUri1()).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {

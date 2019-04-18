@@ -3,6 +3,8 @@ package com.example.arabtech.onlineshoppingapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,7 +18,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.zip.Inflater;
 
 public class CustomAdapter extends BaseAdapter {
@@ -31,6 +40,7 @@ public class CustomAdapter extends BaseAdapter {
     private Button showItem;
     private Shop shop=null;
     private Button deleteItem;
+    private UUID uuid;
 
     public CustomAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
@@ -130,6 +140,44 @@ public class CustomAdapter extends BaseAdapter {
                         stores.getSelected().show(context);
                     }
                 }
+                ViewManager viewManager = ViewManager.getInstance();
+                viewManager.getStore().changeFragment(new ShowProduct());
+            }
+        });
+        deleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View parentRow = (View) v.getParent();
+                ListView list = (ListView) parentRow.getParent();
+                int index = list.getPositionForView(parentRow);
+                if (shop != null) {
+                    uuid=shop.getProducts().get(index).getUuid();
+                    shop.deleteProduct(index);
+                }
+                else{
+                    final Stores stores = Stores.getInstance();
+                    if (stores.isCurrentFlag()) {
+                        uuid=stores.getCurrent().getProducts().get(index).getUuid();
+                        stores.getCurrent().deleteProduct(index);
+                    } else {
+                        uuid=stores.getAllProducts().get(index).getUuid();
+                        stores.deleteProduct(index);
+                    }
+                }
+
+                FirebaseDatabase.getInstance().getReference().child("Stores").child(name.getText().toString()).child("Products").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            if(snapshot.child("uuid").getValue().toString().equals(uuid.toString())){
+                                snapshot.getRef().removeValue();
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
                 ViewManager viewManager = ViewManager.getInstance();
                 viewManager.getStore().changeFragment(new ShowProduct());
             }
