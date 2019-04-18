@@ -3,24 +3,31 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/dresses"
         android:icon="@drawable/dress"
         android:title="Dresses" />
     <item
+        android:id="@+id/jeans"
         android:icon="@drawable/pants"
         android:title="Jeans" />
     <item
+        android:id="@+id/shoes"
         android:icon="@drawable/shoes"
         android:title="Shoes" />
     <item
+        android:id="@+id/shirts"
         android:icon="@drawable/shirt"
         android:title="Shirts" />
     <item
+        android:id="@+id/jackets"
         android:icon="@drawable/jacket"
         android:title="Jackets" />
     <item
+        android:id="@+id/shorts"
         android:icon="@drawable/shorts"
         android:title="Shorts" />
     <item
+        android:id="@+id/sweatshirts"
         android:icon="@drawable/sweatshirt"
         android:title="Sweatshirts" />
 </menu>

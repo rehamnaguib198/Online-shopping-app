@@ -10,15 +10,18 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -38,6 +41,7 @@ import static util.Constants.PERMISSIONS_REQUEST_ENABLE_GPS;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mainNav = null;
+    private NavigationView shoppingNav=null;
     private FrameLayout mainFrame = null;
     private Store store;
     private Profile profile;
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         notifications = new Notifications();
         mainFrame = (FrameLayout) findViewById(R.id.mainFrame);
         mainNav = (BottomNavigationView) findViewById(R.id.mainNav);
+        shoppingNav=(NavigationView) findViewById(R.id.shoppingNav);
         drawerLayout=(DrawerLayout) findViewById(R.id.drawerLayout);
         drawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
@@ -91,6 +96,37 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        shoppingNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.dresses:
+                        Toast.makeText(getApplicationContext(),"Dresses",Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.jeans:
+                        Toast.makeText(getApplicationContext(),"Jeans",Toast.LENGTH_SHORT).show();
+                    case R.id.shoes:
+                        Toast.makeText(getApplicationContext(),"Shoes",Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.shirts:
+                        Toast.makeText(getApplicationContext(),"Shirts",Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.jackets:
+                        Toast.makeText(getApplicationContext(),"Jackets",Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.shorts:
+                        Toast.makeText(getApplicationContext(),"Shorts",Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.sweatshirts:
+                        Toast.makeText(getApplicationContext(),"Sweatshirts",Toast.LENGTH_SHORT).show();
+                        return true;
+                }
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+                drawer.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
     }
     //map permissions
     private boolean checkMapServices(){
@@ -202,6 +238,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, fragment);
         fragmentTransaction.commit();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.shopping_list, menu);
+        return true;
     }
 
     @Override

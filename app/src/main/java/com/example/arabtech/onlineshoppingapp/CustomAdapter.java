@@ -29,10 +29,17 @@ public class CustomAdapter extends BaseAdapter {
     private ImageView proPic;
     private ImageView post;
     private Button showItem;
+    private Shop shop=null;
+    private Button deleteItem;
 
     public CustomAdapter(Context context, ArrayList<Product> products) {
         this.context = context;
         this.products = products;
+    }
+    public CustomAdapter(Context context, ArrayList<Product> products,Shop shop){
+        this.context = context;
+        this.products = products;
+        this.shop=shop;
     }
     @Override
     public int getCount() {
@@ -55,7 +62,11 @@ public class CustomAdapter extends BaseAdapter {
             inflater=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         if(view==null){
-            view=inflater.inflate(R.layout.row_feed,viewGroup,false);
+            if(shop!=null){
+                view=inflater.inflate(R.layout.my_store_row_feed,viewGroup,false);
+            } else{
+                view=inflater.inflate(R.layout.row_feed,viewGroup,false);
+            }
         }
         name=view.findViewById(R.id.name);
         time=view.findViewById(R.id.time);
@@ -63,6 +74,9 @@ public class CustomAdapter extends BaseAdapter {
         proPic=view.findViewById(R.id.imgView_proPic);
         post=view.findViewById(R.id.imgView_postPic);
         showItem = view.findViewById(R.id.showButton);
+        if(shop!=null){
+            deleteItem=view.findViewById(R.id.deleteButton);
+        }
         final Stores stores = Stores.getInstance();
 
         if (stores.isCurrentFlag()) {
@@ -95,15 +109,21 @@ public class CustomAdapter extends BaseAdapter {
                 View parentRow = (View) v.getParent();
                 ListView list = (ListView) parentRow.getParent();
                 int index = list.getPositionForView(parentRow);
-                if (stores.isCurrentFlag()) {
-                    stores.getCurrent().selectProduct(index);
-                    stores.getCurrent().getSelected().show(context);
-                } else {
-                    stores.selectProduct(index);
-                    stores.getSelected().show(context);
+                if (shop != null) {
+                    shop.selectProduct(index);
+                    shop.getSelected().show(context);
                 }
-                ViewManager viewManager = ViewManager.getInstance();
-                viewManager.getStore().changeFragment(new ShowProduct());
+                else{
+                    if (stores.isCurrentFlag()) {
+                        stores.getCurrent().selectProduct(index);
+                        stores.getCurrent().getSelected().show(context);
+                    } else {
+                        stores.selectProduct(index);
+                        stores.getSelected().show(context);
+                    }
+                    ViewManager viewManager = ViewManager.getInstance();
+                    viewManager.getStore().changeFragment(new ShowProduct());
+                }
             }
         });
         return view;

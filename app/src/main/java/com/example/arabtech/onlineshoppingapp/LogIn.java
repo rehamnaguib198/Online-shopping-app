@@ -122,6 +122,6 @@ public class LogIn extends AppCompatActivity {
         startActivity(new Intent(LogIn.this, Register.class));
     }
     public void signIn(){
-        startActivity(new Intent(LogIn.this, MainActivity.class));
+        startActivity(new Intent(LogIn.this, StoreView.class));
     }
 }

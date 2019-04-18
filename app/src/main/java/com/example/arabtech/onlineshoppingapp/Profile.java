@@ -55,7 +55,7 @@ public class Profile extends Fragment {
                 Stores stores = Stores.getInstance();
                 stores.setCurrentFlag(true);
                 stores.setCurrent(name);
-                stores.getCurrent().setSelected(null);
+                //stores.getCurrent().setSelected(null);
                 DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + name + "/Details";
                 firebaseClient = new FirebaseClient(getContext(), DB_URL);
                 firebaseClient.getStoreInfo();

@@ -37,6 +37,7 @@ public class FirebaseClient  {
     private ListView listView;
     private Firebase firebase;
     private Product product;
+    private Shop shop=null;
 
 
     public  FirebaseClient(Context c, String DB_URL, ListView listView)
@@ -44,6 +45,15 @@ public class FirebaseClient  {
         this.c= c;
         this.DB_URL= DB_URL;
         this.listView= listView;
+        Firebase.setAndroidContext(c);
+        firebase=new Firebase(DB_URL);
+    }
+    public  FirebaseClient(Context c, String DB_URL, ListView listView,Shop shop)
+    {
+        this.c= c;
+        this.DB_URL= DB_URL;
+        this.listView= listView;
+        this.shop=shop;
         Firebase.setAndroidContext(c);
         firebase=new Firebase(DB_URL);
     }
@@ -290,8 +300,14 @@ public class FirebaseClient  {
                 product.setImg1(dataSnapshot.getValue(Product.class).getImg1());
                 product.setCategory(dataSnapshot.getValue(Product.class).getCategory());
                 product.setPrice(dataSnapshot.getValue(Product.class).getPrice());
-                stores.getCurrent().getProducts().add(product);
-                stores.getCurrent().updateProducts(c, listView);
+                if(shop!=null){
+                    shop.getProducts().add(product);
+                    shop.updateProducts(c, listView);
+                } else{
+                    stores.getCurrent().getProducts().add(product);
+                    stores.getCurrent().updateProducts(c, listView);
+                }
+
             }
 
             @Override
