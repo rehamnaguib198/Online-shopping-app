@@ -53,7 +53,7 @@ public class LogIn extends AppCompatActivity {
         password = (EditText) findViewById(R.id.passwordEditText);
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
-            signIn();
+            //signIn();
         }
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);

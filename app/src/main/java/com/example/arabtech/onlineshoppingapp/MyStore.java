@@ -71,7 +71,7 @@ public class MyStore extends Store {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 shopName[0] = dataSnapshot.getValue().toString();
                 Shop shop=new Shop(shopName[0]);
-                shop.setLogo("noImage");
+                shop.setLogo("noImage"); //to be changed
                 shop.setRegistered(true);
                 DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + shopName[0] + "/Products";
                 firebaseClient = new FirebaseClient(getContext(), DB_URL, listView,shop);

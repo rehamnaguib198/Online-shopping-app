@@ -3,6 +3,7 @@ package com.example.arabtech.onlineshoppingapp;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -51,6 +52,14 @@ public class Stores {
 
     public void setCurrentFlag(boolean currentFlag) {
         this.currentFlag = currentFlag;
+    }
+
+    public boolean isFilters() {
+        return filters;
+    }
+
+    public void setFilters(boolean filters) {
+        this.filters = filters;
     }
 
     public Shop getCurrent() {

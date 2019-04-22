@@ -80,7 +80,6 @@ public class ShowProduct extends Fragment {
 
         description.setText(selected.getDescription());
         size.setText(selected.getSize());
-        Toast.makeText(getContext(), selected.getSize(), Toast.LENGTH_LONG).show();
         color.setText(selected.getColor());
         price.setText(selected.getPrice());
         offers.setText(selected.getOffers());

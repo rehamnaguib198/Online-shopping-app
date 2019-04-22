@@ -77,16 +77,26 @@ public class Store extends Fragment {
 
         if (stores.isCurrentFlag()) {
            // stores.getCurrent().setSelected(null);
-            stores.getCurrent().getProducts().clear();
-            DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products";
-            firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
-            firebaseClient.productsUpdate();
+
+            if (stores.getCurrent().isFilters()) {
+                stores.getCurrent().updateProducts(getContext(), listView);
+            } else {
+                stores.getCurrent().getProducts().clear();
+                DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + stores.getCurrent().getName() + "/Products";
+                firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
+                firebaseClient.productsUpdate();
+            }
         } else {
-            stores.getAllProducts().clear();
+
             stores.setSelected(null);
-            DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores";
-            firebaseClient= new FirebaseClient(getContext(), DB_URL,listView);
-            firebaseClient.allProducts();
+            if (stores.isFilters()) {
+                stores.updateProducts(getContext(), listView);
+            } else {
+                stores.getAllProducts().clear();
+                DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores";
+                firebaseClient = new FirebaseClient(getContext(), DB_URL, listView);
+                firebaseClient.allProducts();
+            }
         }
         return view;
     }

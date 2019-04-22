@@ -1,5 +1,6 @@
 package com.example.arabtech.onlineshoppingapp;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +33,8 @@ public class StoreView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_store_view);
+        ViewManager viewManager = ViewManager.getInstance();
+        viewManager.setActivity(this);
         store = new MyStore();
         setFragment(store);
     }
@@ -49,7 +52,8 @@ public class StoreView extends AppCompatActivity {
             finish();
         }
         else if(item.getItemId()==R.id.addProduct){
-            // code for adding a product
+            Intent intent = new Intent(StoreView.this, AddProduct.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         LayoutInflater factory = LayoutInflater.from(this);
-        View myView = factory.inflate(R.layout.fragment_store, null);
+        final View myView = factory.inflate(R.layout.fragment_store, null);
         store = new Store(/*myView*/);
         profile = new Profile();
         notifications = new Notifications();
@@ -99,28 +100,64 @@ public class MainActivity extends AppCompatActivity {
         shoppingNav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
+                Stores stores = Stores.getInstance();
+                Filters filters;
+                if (stores.isCurrentFlag()) {
+                    filters = new Filters(stores.getCurrent().getProducts());
+                    stores.getCurrent().setFilters(true);
+                } else {
+                    filters = new Filters(stores.getAllProducts());
+                    stores.setFilters(true);
+                }
                 switch(item.getItemId()) {
                     case R.id.dresses:
+                        filters.categoryFilter("Dress");
                         Toast.makeText(getApplicationContext(),"Dresses",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
+                        //return true;
                     case R.id.jeans:
+                        filters.categoryFilter("Jeans");
                         Toast.makeText(getApplicationContext(),"Jeans",Toast.LENGTH_SHORT).show();
+                        break;
                     case R.id.shoes:
+                        filters.categoryFilter("Shoes");
                         Toast.makeText(getApplicationContext(),"Shoes",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
+                        //return true;
                     case R.id.shirts:
+                        filters.categoryFilter("Shirt");
                         Toast.makeText(getApplicationContext(),"Shirts",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
+                        //return true;
                     case R.id.jackets:
+                        filters.categoryFilter("Jacket");
                         Toast.makeText(getApplicationContext(),"Jackets",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
+                        //return true;
                     case R.id.shorts:
+                        filters.categoryFilter("Short");
                         Toast.makeText(getApplicationContext(),"Shorts",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
+                        //return true;
                     case R.id.sweatshirts:
+                        filters.categoryFilter("SweatShirt");
                         Toast.makeText(getApplicationContext(),"Sweatshirts",Toast.LENGTH_SHORT).show();
-                        return true;
+                        break;
+                        //return true;
                 }
+
+                ListView listView = myView.findViewById(R.id.listView);
+                if (stores.isCurrentFlag()) {
+                    stores.getCurrent().setFiltered(filters.getFiltered());
+
+                    //stores.getCurrent().updateProducts(getApplicationContext(), listView);
+                } else {
+                    stores.setFiltered(filters.getFiltered());
+                    Toast.makeText(getApplicationContext(), Integer.toString(stores.getFiltered().size()), Toast.LENGTH_LONG).show();
+
+                    //stores.updateProducts(getApplicationContext(), listView);
+                }
+                setFragment(new Store());
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawer.closeDrawer(GravityCompat.START);
                 return true;

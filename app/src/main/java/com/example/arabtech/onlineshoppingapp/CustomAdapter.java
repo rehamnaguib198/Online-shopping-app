@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,33 +144,36 @@ public class CustomAdapter extends BaseAdapter {
                 viewManager.getStore().changeFragment(new ShowProduct());
             }
         });
-        deleteItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View parentRow = (View) v.getParent();
-                ListView list = (ListView) parentRow.getParent();
-                int index = list.getPositionForView(parentRow);
-                String myProduct="";
-                if (shop != null) {
-                    myProduct=shop.getProducts().get(index).getId();
-                    shop.deleteProduct(index);
-                }
-                else{
-                    final Stores stores = Stores.getInstance();
-                    if (stores.isCurrentFlag()) {
-                        myProduct=stores.getCurrent().getProducts().get(index).getId();
-                        stores.getCurrent().deleteProduct(index);
-                    } else {
-                        myProduct=stores.getAllProducts().get(index).getId();
-                        stores.deleteProduct(index);
+        if (shop!=null) {
+            deleteItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View parentRow = (View) v.getParent();
+                    ListView list = (ListView) parentRow.getParent();
+                    int index = list.getPositionForView(parentRow);
+                    String myProduct="";
+                    if (shop != null) {
+                        myProduct=shop.getProducts().get(index).getId();
+                        shop.deleteProduct(index);
                     }
-                }
+                    /*else{
+                        final Stores stores = Stores.getInstance();
+                        if (stores.isCurrentFlag()) {
+                            myProduct=stores.getCurrent().getProducts().get(index).getId();
+                            stores.getCurrent().deleteProduct(index);
+                        } else {
+                            myProduct=stores.getAllProducts().get(index).getId();
+                            stores.deleteProduct(index);
+                        }
+                    }*/
 
-                FirebaseDatabase.getInstance().getReference().child("Stores").child(name.getText().toString()).child("Products").child(myProduct).removeValue();
-                ViewManager viewManager = ViewManager.getInstance();
-                viewManager.getStore().changeFragment(new ShowProduct());
-            }
-        });
+                    FirebaseDatabase.getInstance().getReference().child("Stores").child(name.getText().toString()).child("Products").child(myProduct).removeValue();
+                    ViewManager viewManager = ViewManager.getInstance();
+                    viewManager.getStore().changeFragment(new ShowProduct());
+                }
+            });
+        }
+
         return view;
     }
 }

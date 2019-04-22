@@ -14,17 +14,24 @@ public class Filters {
         filtered = new ArrayList<Product>();
     }
 
-    public ArrayList<Product> categoryFilter(String category) {
+    public ArrayList<Product> getFiltered() {
+        return filtered;
+    }
+
+    public void setFiltered(ArrayList<Product> filtered) {
+        this.filtered = filtered;
+    }
+
+    public void categoryFilter(String category) {
         for (int i = 0; i < products.size(); i++) {
             Product p = products.get(i);
             if (p.getCategory().equals(category)) {
                 filtered.add(p);
             }
         }
-        return filtered;
     }
 
-    public ArrayList<Product> priceFilter(int price) {
+    public void priceFilter(int price) {
         for (int i = 0; i < products.size(); i++) {
             Product p = products.get(i);
             float p_price;
@@ -38,6 +45,5 @@ public class Filters {
                 }
             }
         }
-        return filtered;
     }
 }
