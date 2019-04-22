@@ -19,14 +19,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -49,7 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private Notifications notifications;
     private ActionBarDrawerToggle drawerToggle=null;
     private DrawerLayout drawerLayout=null;
+    private SearchView searchView;
+    private Spinner spinner;
     private boolean mLocationPermissionGranted=false;
+    private ArrayList<Integer> prices;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +70,17 @@ public class MainActivity extends AppCompatActivity {
         mainNav = (BottomNavigationView) findViewById(R.id.mainNav);
         shoppingNav=(NavigationView) findViewById(R.id.shoppingNav);
         drawerLayout=(DrawerLayout) findViewById(R.id.drawerLayout);
+        spinner=(Spinner) findViewById(R.id.spinner);
+        searchView=(SearchView) findViewById(R.id.searchView);
         drawerToggle=new ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
+        prices=new ArrayList<>();
         drawerToggle.syncState();
+        prices.add(50);
+        prices.add(100);
+        prices.add(200);
+        prices.add(500);
+        prices.add(1000);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(checkMapServices()){
             if(mLocationPermissionGranted){
@@ -160,6 +174,37 @@ public class MainActivity extends AppCompatActivity {
                 setFragment(new Store());
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
                 drawer.closeDrawer(GravityCompat.START);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                        // your code here
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parentView) {
+                        // your code here
+                    }
+                });
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        /*if(!query.equals(null)){
+                            Toast.makeText(getApplicationContext(),"hola",Toast.LENGTH_SHORT);
+                            return true;
+                        }*/
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        if (TextUtils.isEmpty(newText)) {
+                             //code
+                        } else {
+                            //code
+                        }
+                        return true;
+                    }
+                });
                 return true;
             }
         });
