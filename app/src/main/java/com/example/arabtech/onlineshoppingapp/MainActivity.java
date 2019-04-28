@@ -159,17 +159,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                         //return true;
                 }
-
-                ListView listView = myView.findViewById(R.id.listView);
                 if (stores.isCurrentFlag()) {
                     stores.getCurrent().setFiltered(filters.getFiltered());
-
-                    //stores.getCurrent().updateProducts(getApplicationContext(), listView);
                 } else {
                     stores.setFiltered(filters.getFiltered());
                     Toast.makeText(getApplicationContext(), Integer.toString(stores.getFiltered().size()), Toast.LENGTH_LONG).show();
-
-                    //stores.updateProducts(getApplicationContext(), listView);
                 }
                 setFragment(new Store());
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -178,6 +172,24 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                         // your code here
+                        int price = Integer.parseInt(spinner.getItemAtPosition(position).toString());
+                        Stores stores = Stores.getInstance();
+                        Filters filters;
+                        if (stores.isCurrentFlag()) {
+                            filters = new Filters(stores.getCurrent().getProducts());
+                            stores.getCurrent().setFilters(true);
+                        } else {
+                            filters = new Filters(stores.getAllProducts());
+                            stores.setFilters(true);
+                        }
+                        filters.priceFilter(price);
+                        if (stores.isCurrentFlag()) {
+                            stores.getCurrent().setFiltered(filters.getFiltered());
+                        } else {
+                            stores.setFiltered(filters.getFiltered());
+                            Toast.makeText(getApplicationContext(), Integer.toString(stores.getFiltered().size()), Toast.LENGTH_LONG).show();
+                        }
+                        setFragment(new Store());
                     }
 
                     @Override

@@ -126,9 +126,12 @@ public class CustomAdapter extends BaseAdapter {
                 View parentRow = (View) v.getParent();
                 ListView list = (ListView) parentRow.getParent();
                 int index = list.getPositionForView(parentRow);
+                ShowProduct showProduct = new ShowProduct();
                 if (shop != null) {
                     shop.selectProduct(index);
+                    shop.getSelected().setShop(shop);
                     shop.getSelected().show(context);
+                    showProduct.setSelected(shop.getSelected());
                 }
                 else{
                     final Stores stores = Stores.getInstance();
@@ -141,7 +144,7 @@ public class CustomAdapter extends BaseAdapter {
                     }
                 }
                 ViewManager viewManager = ViewManager.getInstance();
-                viewManager.getStore().changeFragment(new ShowProduct());
+                viewManager.getStore().changeFragment(showProduct);
             }
         });
         if (shop!=null) {

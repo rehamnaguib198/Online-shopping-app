@@ -36,10 +36,6 @@ public class ShowProduct extends Fragment {
         // Required empty public constructor
     }
 
-    public void setCurrent(Shop current) {
-        this.current = current;
-    }
-
     public void setSelected(Product selected) {
         this.selected = selected;
     }
@@ -62,15 +58,18 @@ public class ShowProduct extends Fragment {
         img3 = view.findViewById(R.id.image3);
         img4 = view.findViewById(R.id.image4);
 
-        stores = Stores.getInstance();
-        if (stores.isCurrentFlag()) {
-            current = stores.getCurrent();
-            selected = current.getSelected();
+        if (selected != null) {
+            current = selected.getShop();
         } else {
-            current = stores.getSelected().getShop();
-            selected = stores.getSelected();
+            stores = Stores.getInstance();
+            if (stores.isCurrentFlag()) {
+                current = stores.getCurrent();
+                selected = current.getSelected();
+            } else {
+                current = stores.getSelected().getShop();
+                selected = stores.getSelected();
+            }
         }
-
         storeName.setText(current.getName());
         if (current.getLogo().equals("noImage")) {
             logo.setImageResource(R.drawable.no_image);
@@ -110,5 +109,6 @@ public class ShowProduct extends Fragment {
 
         return view;
     }
+
 
 }
