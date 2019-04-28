@@ -46,4 +46,16 @@ public class Filters {
             }
         }
     }
+
+    public void search(String searchFor) {
+        for (int i = 0; i < products.size(); i++) {
+            Product p = products.get(i);
+            String REGEX = "\\b" + searchFor + "\\b";
+            Pattern pattern = Pattern.compile(REGEX);
+            Matcher matcher = pattern.matcher(p.getDescription());
+            if (matcher.find()) {
+                filtered.add(p);
+            }
+        }
+    }
 }
