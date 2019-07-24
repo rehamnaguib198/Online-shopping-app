@@ -51,9 +51,10 @@ public class Register extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passEditText;
     private ImageView imageView;
-    String imageName= UUID.randomUUID().toString()+".jpg";
+    private String imageName= UUID.randomUUID().toString()+".jpg";
     private FirebaseAuth mAuth=FirebaseAuth.getInstance();;
     private Uri selectedImage;
+    private static final int GALLERY_INENT = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +78,11 @@ public class Register extends AppCompatActivity {
 
     public void getPhoto() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, GALLERY_INENT);
     }
     public void importImage(View view) {
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_INENT);
         } else {
             getPhoto();
         }
@@ -89,8 +90,10 @@ public class Register extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        selectedImage = data.getData();
-        if (requestCode == 1 && resultCode == RESULT_OK && selectedImage != null) {
+        if (requestCode == GALLERY_INENT && resultCode == RESULT_OK) {
+            selectedImage = data.getData();
+        }
+        if (requestCode == GALLERY_INENT && resultCode == RESULT_OK && selectedImage != null) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 imageView.setImageBitmap(bitmap);
@@ -119,7 +122,7 @@ public class Register extends AppCompatActivity {
                             FirebaseDatabase.getInstance().getReference().child("Stores").child(nameEditText.getText().toString()).child("Products").setValue(0);
                             String DB_URL = "https://onlineshopping-2857f.firebaseio.com/Stores/" + nameEditText.getText().toString();
                             FirebaseClient client=new FirebaseClient(getApplicationContext(),DB_URL);
-                            client.uploadImage(0,selectedImage);
+//                            client.uploadImage(0,selectedImage);
                             FirebaseUser user = mAuth.getCurrentUser();
                             HashMap<String,String> userMap=new HashMap();
                             userMap.put("name",nameEditText.getText().toString());
